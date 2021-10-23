@@ -1,7 +1,5 @@
-import discord, requests, time, asyncio, os
+import discord, requests, time, threading, asyncio
 from discord.ext import commands, tasks
-
-os.system('cls')
 
 Bot = commands.Bot(command_prefix = '.', self_bot = True)
 Channel = 900020551668600935
@@ -84,6 +82,32 @@ async def Beg():
 		eval('0+0')
 
 @tasks.loop(minutes = 1)
+async def Dig():
+	Channel_Object = Bot.get_channel(Channel)
+
+	await Channel_Object.send('pls dig')
+
+	while True:
+		Message_Object = await Channel_Object.history(limit = 1).flatten()
+		Message_Object = Message_Object[0]
+
+		if Message_Object.author.id == 270904126974590976:
+			break
+		else:
+			continue
+
+	Message_Object = await Channel_Object.history(limit = 1).flatten()
+	Message_Object = Message_Object[0]
+
+	try:
+		Brought_Back = Message_Object.content.split('brought back ')[1].split(' <')[0].lower()
+
+		if 'nothing' not in Brought_Back.lower():
+			print(f'Fished and brought back: {Brought_Back}')
+	except:
+		eval('0+0')
+
+@tasks.loop(minutes = 1)
 async def Deposit():
 	Channel_Object = Bot.get_channel(Channel)
 
@@ -118,11 +142,11 @@ async def start(ctx):
 				Item = Line.split('`')[1]
 				Items.append(Item)
 
-				if Item not in ['fishingpole', 'huntingrifle', 'laptop']:
-					await ctx.send(f'pls sell {Item}')
+				if Item not in ['fishingpole', 'huntingrifle', 'laptop', 'lifesaver', 'shovel']:
+					await ctx.send(f'pls sell {Item} max')
 					time.sleep(3)
 
-		if Items == ['fishingpole', 'huntingrifle', 'laptop']:
+		if Items == ['fishingpole', 'huntingrifle', 'laptop', 'lifesaver']:
 			break
 		else:
 			continue
@@ -130,6 +154,7 @@ async def start(ctx):
 	Hunt.start()
 	Fish.start()
 	Beg.start()
+	Dig.start()
 	Deposit.start()
 
 @Bot.command()
@@ -169,4 +194,43 @@ async def on_ready():
 
 	print(Message_Object.embeds[0].to_dict()['description'].replace('**', '').replace('⏣', '').replace('`', '').replace('  ', ' ')+'\n')
 
-Bot.run('TOKEN', bot = False, reconnect = True)
+	while True:
+		await Channel_Object.send('pls inv')
+
+		Channel_Object = Bot.get_channel(Channel)
+
+		while True:
+			Message_Object = await Channel_Object.history(limit = 1).flatten()
+			Message_Object = Message_Object[0]
+
+			if Message_Object.author.id == 270904126974590976:
+				break
+			else:
+				continue
+
+		Message_Object = await Channel_Object.history(limit = 1).flatten()
+		Message_Object = Message_Object[0]
+
+		Split = Message_Object.embeds[0].to_dict()['description'].split('\n')
+		Items = []
+
+		for Line in Split:
+			if Line[:1] == '*' and 'Collectable' not in Line:
+				Item = Line.split('`')[1]
+				Items.append(Item)
+
+				if Item not in ['fishingpole', 'huntingrifle', 'laptop', 'lifesaver']:
+					await Channel_Object.send(f'pls sell {Item}')
+					time.sleep(3)
+
+		if Items == ['fishingpole', 'huntingrifle', 'laptop', 'lifesaver']:
+			break
+		else:
+			continue
+
+	Hunt.start()
+	Fish.start()
+	Beg.start()
+	Deposit.start()
+
+Bot.run('NDgwMTk2NjIyOTYyMzkzMDg5.YP849Q.kSpjMiMUWA1kGsRn2yar1g9XTm4', bot = False, reconnect = True)
