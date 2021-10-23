@@ -233,4 +233,4 @@ async def on_ready():
 	Beg.start()
 	Deposit.start()
 
-Bot.run('NDgwMTk2NjIyOTYyMzkzMDg5.YP849Q.kSpjMiMUWA1kGsRn2yar1g9XTm4', bot = False, reconnect = True)
+Bot.run('', bot = False, reconnect = True)
